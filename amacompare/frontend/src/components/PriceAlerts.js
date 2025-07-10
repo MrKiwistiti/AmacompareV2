@@ -29,7 +29,6 @@ const PriceAlerts = ({ asin, productName, productImage, countries, isVisible, on
     }
   }, []);
 
-  // Suggérer un prix cible basé sur le meilleur prix actuel
   useEffect(() => {
     if (countries && countries.length > 0) {
       const bestPrice = Math.min(...countries.map(c => c.price));

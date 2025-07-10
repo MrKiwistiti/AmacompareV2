@@ -9,25 +9,22 @@ import React, { useState } from 'react';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import ThemeToggle from './components/ThemeToggle';
 import PriceHistory from './components/PriceHistory';
+import PriceAlerts from './components/PriceAlerts';
 
 const AppContent = () => {
   const { theme } = useTheme();
   
-  // États pour les 2 étapes
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [priceComparison, setPriceComparison] = useState(null);
-  
-  // États de chargement
   const [searchLoading, setSearchLoading] = useState(false);
   const [compareLoading, setCompareLoading] = useState(false);
-  
-  // Erreurs
   const [searchError, setSearchError] = useState('');
   const [compareError, setCompareError] = useState('');
+  const [showAlerts, setShowAlerts] = useState(false);
+  const [comparisonData, setComparisonData] = useState(null);
 
-  // ========== ÉTAPE 1: RECHERCHE DE PRODUITS ==========
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
       setSearchError('Veuillez saisir un nom de produit');
@@ -80,6 +77,7 @@ const AppContent = () => {
       if (!response.ok) throw new Error(data.error || 'Erreur de comparaison');
       
       setPriceComparison(data);
+      setComparisonData(data);
     } catch (err) {
       setCompareError(err.message);
     } finally {
@@ -570,11 +568,77 @@ const AppContent = () => {
                     </p>
                   </div>
                 )}
+                <div style={{
+                  marginTop: '2rem',
+                  padding: '1.5rem',
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  borderRadius: '1rem',
+                  color: 'white',
+                  textAlign: 'center'
+                }}>
+                  <div style={{ marginBottom: '1rem' }}>
+                    <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.5rem' }}>
+                      🔔 Alerte Prix Intelligente
+                    </h3>
+                    <p style={{ margin: 0, opacity: 0.9 }}>
+                      Soyez notifié par email dès que le prix baisse sous votre seuil
+                    </p>
+                  </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    gap: '1rem', 
+                    justifyContent: 'center',
+                    flexWrap: 'wrap',
+                    alignItems: 'center',
+                    marginBottom: '1rem'
+                  }}>
+                    <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>
+                      💰 Meilleur prix actuel: <strong>{formatPrice(priceComparison.bestPrice)}€</strong>
+                    </div>
+                    <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>
+                      📈 Économie max: <strong>{formatPrice(priceComparison.maxSavings)}€</strong>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => setShowAlerts(true)}
+                    style={{
+                      padding: '1rem 2rem',
+                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                      border: '2px solid rgba(255, 255, 255, 0.3)',
+                      borderRadius: '2rem',
+                      color: 'white',
+                      fontSize: '1.1rem',
+                      fontWeight: 'bold',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      backdropFilter: 'blur(10px)'
+                    }}
+                    onMouseOver={(e) => {
+                      e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+                      e.target.style.transform = 'translateY(-2px)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                      e.target.style.transform = 'translateY(0)';
+                    }}
+                  >
+                    🔔 Créer une alerte prix
+                  </button>
+                </div>
               </div>
             )}
           </div>
         )}
       </main>
+      <PriceAlerts
+        asin={comparisonData?.asin}
+        productName={comparisonData?.productName}
+        productImage={comparisonData?.image}
+        countries={comparisonData?.countries}
+        isVisible={showAlerts}
+        onClose={() => setShowAlerts(false)}
+      />
 
       <style>
         {`

@@ -108,7 +108,7 @@ app.use(express.json({ limit: '10mb' }));
 
 // Configuration du transporteur email
 const getEmailTransporter = () => {
-    return nodemailer.createTransporter({
+    return nodemailer.createTransport({
         service: CONFIG.EMAIL_SERVICE,
         auth: {
             user: CONFIG.EMAIL_USER,
