@@ -438,9 +438,9 @@ Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
 ## 👨‍💻 Équipe
 
-**Développeur Principal:** [Votre Nom]
-- 🐙 GitHub: [@votre-username](https://github.com/votre-username)
-- 📧 Email: votre.email@example.com
+**Développeur Principal:** kiwi
+- 🐙 GitHub: [@MrKiwistiti](https://github.com/mrkiwistiti)
+- 📧 Email: sven.reichert@epitech.eu
 
 ## 🙏 Remerciements
 
